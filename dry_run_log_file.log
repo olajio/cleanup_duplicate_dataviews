@@ -1,1 +1,33 @@
+2024-12-09 21:40:29,205 - INFO - Retrieving all Kibana objects in space: 'test_space_ola'...
+2024-12-09 21:40:38,111 - INFO - 20 Kibana objects were found in this space: 'test_space_ola'
+2024-12-09 21:40:38,112 - INFO - Exporting all Kibana objects in space: 'test_space_ola' to the 'kibana_objects.ndjson'. This would be used to restore all objects in case something goes wrong...
+2024-12-09 21:40:38,112 - INFO - [DRY-RUN] Would Export all Kibana objects in this space: 'test_space_ola' using the Saved Objects API and save to an NDJSON file: 'kibana_objects.ndjson'
+2024-12-09 21:40:38,338 - WARNING - Duplicated data views found:
+2024-12-09 21:40:47,228 - INFO - Title: my-index*
+2024-12-09 21:40:47,228 - INFO - ID: c2a88270-4fad-45e6-8dae-ef370f7ebd67  : 5
+2024-12-09 21:40:47,228 - INFO - ID: 6f97aef0-24a5-4f98-ba89-f60d1129ad3f  : 1
+2024-12-09 21:40:47,228 - INFO - updated_to_update
+2024-12-09 21:40:47,228 - INFO - {'type': 'search', 'id': 'ff66a616-36bb-4992-b036-d06b15c8330c', 'namespaces': ['test_space_ola'], 'references': [{'name': 'kibanaSavedObjectMeta.searchSourceJSON.index', 'type': 'index-pattern', 'id': '6f97aef0-24a5-4f98-ba89-f60d1129ad3f'}], 'managed': False, 'migrationVersion': {'search': '10.4.0'}, 'updated_at': '2024-12-10T03:39:45.817Z', 'updated_by': 'u_L1yAPITrWPW-zqTinBdcm9IG1wKdaijMl9zIE5q8FtM_0', 'created_at': '2024-11-22T18:25:19.902Z', 'version': 'WzYxOTg3LDM0XQ==', 'coreMigrationVersion': '8.8.0', 'typeMigrationVersion': '10.4.0', 'score': 0}
+2024-12-09 21:40:47,228 - INFO - [DRY-RUN] Would update data view ID in search with ID: ff66a616-36bb-4992-b036-d06b15c8330c from 6f97aef0-24a5-4f98-ba89-f60d1129ad3f to c2a88270-4fad-45e6-8dae-ef370f7ebd67
+2024-12-09 21:40:54,955 - INFO - Title: test_index*
+2024-12-09 21:40:54,955 - INFO - ID: aa2986e1-4dc5-49b6-9831-7a268a78bb9f  : 6
+2024-12-09 21:40:54,956 - INFO - ID: a7e1827e-4a06-49f5-b58d-2d9a49e3285c  : 1
+2024-12-09 21:40:54,956 - INFO - updated_to_update
+2024-12-09 21:40:54,956 - INFO - {'type': 'search', 'id': '6412fd64-0613-4fa7-8f61-94dfe63b1931', 'namespaces': ['test_space_ola'], 'references': [{'name': 'kibanaSavedObjectMeta.searchSourceJSON.index', 'type': 'index-pattern', 'id': 'a7e1827e-4a06-49f5-b58d-2d9a49e3285c'}], 'managed': False, 'migrationVersion': {'search': '10.4.0'}, 'updated_at': '2024-12-10T03:39:56.252Z', 'updated_by': 'u_L1yAPITrWPW-zqTinBdcm9IG1wKdaijMl9zIE5q8FtM_0', 'created_at': '2024-11-22T18:25:19.902Z', 'version': 'WzYxOTkwLDM0XQ==', 'coreMigrationVersion': '8.8.0', 'typeMigrationVersion': '10.4.0', 'score': 0}
+2024-12-09 21:40:54,956 - INFO - [DRY-RUN] Would update data view ID in search with ID: 6412fd64-0613-4fa7-8f61-94dfe63b1931 from a7e1827e-4a06-49f5-b58d-2d9a49e3285c to aa2986e1-4dc5-49b6-9831-7a268a78bb9f
+2024-12-09 21:40:54,956 - INFO - [DRY-RUN] The following objects would be updated:
+2024-12-09 21:40:54,956 - INFO - {'type': 'search', 'id': 'ff66a616-36bb-4992-b036-d06b15c8330c', 'namespaces': ['test_space_ola'], 'references': [{'name': 'kibanaSavedObjectMeta.searchSourceJSON.index', 'type': 'index-pattern', 'id': '6f97aef0-24a5-4f98-ba89-f60d1129ad3f'}], 'managed': False, 'migrationVersion': {'search': '10.4.0'}, 'updated_at': '2024-12-10T03:39:45.817Z', 'updated_by': 'u_L1yAPITrWPW-zqTinBdcm9IG1wKdaijMl9zIE5q8FtM_0', 'created_at': '2024-11-22T18:25:19.902Z', 'version': 'WzYxOTg3LDM0XQ==', 'coreMigrationVersion': '8.8.0', 'typeMigrationVersion': '10.4.0', 'score': 0}
+2024-12-09 21:40:54,956 - INFO - {'type': 'search', 'id': '6412fd64-0613-4fa7-8f61-94dfe63b1931', 'namespaces': ['test_space_ola'], 'references': [{'name': 'kibanaSavedObjectMeta.searchSourceJSON.index', 'type': 'index-pattern', 'id': 'a7e1827e-4a06-49f5-b58d-2d9a49e3285c'}], 'managed': False, 'migrationVersion': {'search': '10.4.0'}, 'updated_at': '2024-12-10T03:39:56.252Z', 'updated_by': 'u_L1yAPITrWPW-zqTinBdcm9IG1wKdaijMl9zIE5q8FtM_0', 'created_at': '2024-11-22T18:25:19.902Z', 'version': 'WzYxOTkwLDM0XQ==', 'coreMigrationVersion': '8.8.0', 'typeMigrationVersion': '10.4.0', 'score': 0}
+2024-12-09 21:40:54,957 - INFO - [DRY-RUN] 2 objects would have been UPDATED if this code actually ran
+2024-12-09 21:40:54,957 - INFO - REVIEW DUPLICATE DATA VIEWS BEFORE REMOVING DUPLICATES WITH ZERO REFERENCES
+2024-12-09 21:41:02,522 - INFO - Title: my-index*
+2024-12-09 21:41:02,522 - INFO - ID: c2a88270-4fad-45e6-8dae-ef370f7ebd67  : 5
+2024-12-09 21:41:02,522 - INFO - ID: 6f97aef0-24a5-4f98-ba89-f60d1129ad3f  : 1
+2024-12-09 21:41:10,183 - INFO - Title: test_index*
+2024-12-09 21:41:10,183 - INFO - ID: aa2986e1-4dc5-49b6-9831-7a268a78bb9f  : 6
+2024-12-09 21:41:10,184 - INFO - ID: a7e1827e-4a06-49f5-b58d-2d9a49e3285c  : 1
+2024-12-09 21:41:10,184 - WARNING - ID of Data views to be deleted:
+2024-12-09 21:41:10,184 - INFO - ['6f97aef0-24a5-4f98-ba89-f60d1129ad3f', 'a7e1827e-4a06-49f5-b58d-2d9a49e3285c']
+2024-12-09 21:41:10,184 - INFO - [DRY-RUN] Would check if data view with id: '6f97aef0-24a5-4f98-ba89-f60d1129ad3f' is referenced by any object. If no object is referecning this Data View, it would be deleted
+2024-12-09 21:41:10,184 - INFO - [DRY-RUN] Would check if data view with id: 'a7e1827e-4a06-49f5-b58d-2d9a49e3285c' is referenced by any object. If no object is referecning this Data View, it would be deleted
 
