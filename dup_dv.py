@@ -218,6 +218,28 @@ def has_references(all_objects, data_view_id):
                 return True
     return False
 
+def backup_data_view(kibana_url, headers, space_id, data_view_id, output_file):
+    export_objects_endpoint = f"{kibana_url}/s/{space_id}/api/saved_objects/_export"
+    payload = {
+        "objects": [
+            {
+                "id": data_view_id,
+                "type": "index-pattern"
+            }
+        ],
+        "includeReferencesDeep": True
+    }
+
+    response = requests.post(export_objects_endpoint, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        # Write the backup data to a file (one for each data view)
+        with open(f"data_view_{data_view_id}_backup.ndjson", "w") as file:
+            file.write(response.text)
+        logging.info(f"Backup successful for data view: '{data_view_id}'! Saved to: 'data_view_{data_view_id}_backup.ndjson'")
+    else:
+        logging.error(f"Failed to backup data view {data_view_id}. Error: {response.text}")
+        sys.exit(1)
 
 # Delete Data View if it has no references by other Kibana Objects
 def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, space_id, headers, dry_run):
@@ -277,8 +299,6 @@ def main(kibana_url, headers, space_id, dry_run):
                                 ref_name = ref["name"]
                                 new_data_view_id = most_referenced_id
                                 print("")
-                                print("updated_to_update")
-                                print(object)
                                 update_references(ref_type, ref_name, object_type, object_id, old_data_view_id, new_data_view_id, kibana_url, headers, dry_run)
                                 updated_objects.append(object)
                                 print("")
@@ -325,6 +345,9 @@ def main(kibana_url, headers, space_id, dry_run):
             print("")
             data_views_to_be_deleted = []
         for data_view_id in data_views_to_be_deleted:
+            # Backup each data view
+            backup_data_view(kibana_url, headers, space_id, data_view_id, f"BData_view_{data_view_id}_back_up.ndjson")
+            # Delete each data view
             delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, space_id, headers, dry_run)
 
     else:
