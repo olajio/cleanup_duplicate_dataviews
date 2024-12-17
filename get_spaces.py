@@ -1,7 +1,6 @@
 import requests
 from argparse import ArgumentParser
 
-
 def get_headers(api_key):
     headers = {
         'kbn-xsrf': 'true',
@@ -30,20 +29,19 @@ def list_kibana_space_ids(headers, kibana_url):
         print(f"Error fetching Kibana spaces: {e}")
         return []
 
+
 # Example usage
 if __name__ == "__main__":
     parser = ArgumentParser(description='Automate the process of cleaning up duplicate data views!')
     parser.add_argument('--kibana_url', default='None', required=True)
     parser.add_argument('--api_key', default='None', required=True)
-    parser.add_argument('--space_id', default='None', required=True)
 
     args = parser.parse_args()
     kibana_url = args.kibana_url
     api_key = args.api_key
-    space_id = args.space_id
 
     headers = get_headers(api_key)
-    
+
     space_ids = list_kibana_space_ids(headers, kibana_url)
     print("Kibana Space IDs: \n")
     for space in space_ids:
