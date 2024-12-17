@@ -57,13 +57,13 @@ Params to the script:
 ## Usage:
  
 
-Python command syntax:
+### Python command syntax:
 
 python3 delete_duplicate_data_view.py --kibana_url "<kibana_url>" --api_key "<api_key>" --space_id "<space_id>" --dry_run "True"
 
 
 
-Sample command:
+### Sample command:
 
 python3 delete_duplicate_data_view.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.us-east-1.aws.found.io:9243" --api_key "XXXXXXXXXXXXHRIbTZ5LVM6bEp5QXXXXXXXXXXRKWVVrUQ==" --space_id "test_space_ola" --dry_run "True"
 
@@ -79,7 +79,7 @@ python3 delete_duplicate_data_view.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxx
 
 
 
-#Script Workflow
+## Script Workflow
 
 
 
@@ -87,7 +87,7 @@ python3 delete_duplicate_data_view.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxx
 
 
 
-#Restore Kibana Objects and Data views to original state:
+## Restore Kibana Objects and Data views to original state:
 
 
 
