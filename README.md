@@ -2,11 +2,11 @@
 
 ## Main components and relevant links:
 
-code repo: [https://ghe.hedgeserv.net/ITSMA/delete_duplicate_data_view](https://github.com/olajio/duplicate-dv) 
+Code repo: https://github.com/olajio/duplicate-dv
 
-the main script: [https://ghe.hedgeserv.net/ITSMA/delete_duplicate_data_view/blob/main/delete_duplicate_data_view.py](https://github.com/olajio/duplicate-dv/blob/main/dup_dv.py)
+The main script: https://github.com/olajio/duplicate-dv/blob/main/dup_dv.py
 
-get_spaces script: [https://ghe.hedgeserv.net/ITSMA/delete_duplicate_data_view/blob/main/get_spaces.py](https://github.com/olajio/duplicate-dv/blob/main/get_spaces.py)
+get_spaces script: https://github.com/olajio/duplicate-dv/blob/main/get_spaces.py
     
 
 
