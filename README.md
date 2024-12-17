@@ -4,7 +4,7 @@
 
 Code repo: https://github.com/olajio/duplicate-dv
 
-The main script: https://github.com/olajio/duplicate-dv/blob/main/dup_dv.py
+The main script: https://github.com/olajio/duplicate-dv/blob/main/cleanup_duplicate_dataviews.py
 
 get_spaces script: https://github.com/olajio/duplicate-dv/blob/main/get_spaces.py
     
@@ -63,34 +63,17 @@ Params to the script:
 python3 delete_duplicate_data_view.py --kibana_url "<kibana_url>" --api_key "<api_key>" --space_id "<space_id>" --dry_run "True"
 
 
-
 ### Sample command:
 
-python3 delete_duplicate_data_view.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.us-east-1.aws.found.io:9243" --api_key "XXXXXXXXXXXXHRIbTZ5LVM6bEp5QXXXXXXXXXXRKWVVrUQ==" --space_id "test_space_ola" --dry_run "True"
+python3 cleanup_duplicate_dataviews.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.us-east-1.aws.found.io:9243" --api_key "XXXXXXXXXXXXHRIbTZ5LVM6bEp5QXXXXXXXXXXRKWVVrUQ==" --space_id "test_space_ola" --dry_run "True"
 
 
-
-
-
-
-
-
-
-
-
-
-
-## Script Workflow
+### Script Workflow
 
 ![image](https://github.com/user-attachments/assets/8914ad21-11fd-4851-a44d-13ad60ed69a4)
 
 
-
-
-
-
-## Restore Kibana Objects and Data views to original state:
-
+### Restore Kibana Objects and Data views to original state:
 
 
 In the event that something goes wrong while updating the Kibana Objects or Deleting duplicate data views, we can restore the Kibana objects (lens, visualizations, dashboards, maps, data views…) to their states prior to running this script. A file named kibana_objects.ndjson is created each time this script is ran. This file is the backup for ALL Kibana objects in the target space and should be used to restore all objects to their original state. Additionally, if the deleted Data views are the only objects that needed to be restored to their original configuration, this script backs specifically backs up the data views right before they're deleted. Each of the Data views is backed in a file with the following name format: data_view_<data_view_id>_backup.ndjson.
