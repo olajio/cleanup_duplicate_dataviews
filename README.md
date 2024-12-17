@@ -81,6 +81,7 @@ python3 delete_duplicate_data_view.py --kibana_url "https://xxxxxxxxxxxxxxxxxxxx
 
 ## Script Workflow
 
+![image](https://github.com/user-attachments/assets/8914ad21-11fd-4851-a44d-13ad60ed69a4)
 
 
 
