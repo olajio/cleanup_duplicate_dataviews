@@ -70,6 +70,8 @@ python3 cleanup_duplicate_dataviews.py --kibana_url "https://xxxxxxxxxxxxxxxxxxx
 
 ### Script Workflow
 
+https://whiteboard.office.com/me/whiteboards/4f84e454-b330-4c89-9993-cf0526167b1d
+
 ![image](https://github.com/user-attachments/assets/f9142df7-c5b2-4b5f-81d0-e6913561f96b)
 
 
