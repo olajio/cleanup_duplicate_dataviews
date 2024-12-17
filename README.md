@@ -70,7 +70,8 @@ python3 cleanup_duplicate_dataviews.py --kibana_url "https://xxxxxxxxxxxxxxxxxxx
 
 ### Script Workflow
 
-![image](https://github.com/user-attachments/assets/8914ad21-11fd-4851-a44d-13ad60ed69a4)
+![image](https://github.com/user-attachments/assets/f9142df7-c5b2-4b5f-81d0-e6913561f96b)
+
 
 
 ### Restore Kibana Objects and Data views to original state:
