@@ -45,6 +45,9 @@ Params to the script:
 
 <img width="1105" alt="image" src="https://github.com/user-attachments/assets/fff07329-7af3-4870-a0ac-36d74307a4f8" />
 
+<img width="869" alt="image" src="https://github.com/user-attachments/assets/7a1257ce-b07e-4b31-8caa-69ae6f4fa4a0" />
+
+
 
 
 
