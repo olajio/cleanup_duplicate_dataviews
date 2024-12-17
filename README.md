@@ -72,7 +72,7 @@ python3 cleanup_duplicate_dataviews.py --kibana_url "https://xxxxxxxxxxxxxxxxxxx
 
 https://whiteboard.office.com/me/whiteboards/4f84e454-b330-4c89-9993-cf0526167b1d
 
-![image](https://github.com/user-attachments/assets/f9142df7-c5b2-4b5f-81d0-e6913561f96b)
+![image](https://github.com/user-attachments/assets/d1eebca1-d48c-4335-9cfe-a63257de751e)
 
 
 
