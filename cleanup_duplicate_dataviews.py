@@ -1,14 +1,26 @@
-import json
 import sys
-# import ndjson
 import requests
 import os
 import logging
 import argparse
-# import subprocess
-# from elasticsearch import Elasticsearch
 from collections import defaultdict
 from argparse import ArgumentParser
+import argparse
+from datetime import datetime
+import pytz
+
+
+def setup_log_file():
+    """Sets up a log file with the creation timestamp in its name using EST time."""
+    # Define the EST timezone
+    est_tz = pytz.timezone("US/Eastern")
+
+    # Get the current timestamp in EST
+    timestamp = datetime.now(est_tz).strftime("%Y%m%d_%H%M%S")
+
+    # Create the log file name with the EST timestamp
+    log_file_name = f"log_file_{timestamp}.log"
+    return log_file_name
 
 # Configures logging to redirect logs and print statements to a custom log file
 def setup_logging(log_file="output.log"):
@@ -53,6 +65,12 @@ class LoggerWriter:
     def flush(self):
         pass  # No action needed for flush
 
+
+
+# dev_kibana_url = 'https://e001708f0fe44a4d96341be1bf9a9943.us-east-1.aws.found.io:9243'
+# qa_kibana_url = 'https://66f6f47a3ef14711adcaa97b8385a6ed.us-east-1.aws.found.io:9243'
+# prod_kibana_url = 'https://a8d089aa7eb241639d5ba3dbd343cd29.us-east-1.aws.found.io:9243'
+# ccs_kibana_url = 'https://287d86a4b1184182b340bd5074cdfd7e.us-east-1.aws.found.io:9243'
 
 def get_headers(api_key):
     headers = {
@@ -263,7 +281,8 @@ def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, spac
 
 # main
 def main(kibana_url, headers, space_id, dry_run):
-    setup_logging("log_file.log")  # Initialize logging
+    log_file_name = setup_log_file()
+    setup_logging(log_file_name)  # Initialize logging
     updated_objects_count = 0
     data_views_to_be_deleted = []
     objects_config_before_update = []
@@ -365,6 +384,8 @@ if __name__ == "__main__":
     api_key = args.api_key
     space_id = args.space_id
     dry_run = args.dry_run
+
+    
     if dry_run.lower() == 'true':
         dry_run = True
     else:
