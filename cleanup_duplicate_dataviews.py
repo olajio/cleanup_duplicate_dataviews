@@ -1,11 +1,8 @@
 import sys
 import requests
-import os
 import logging
-import argparse
 from collections import defaultdict
 from argparse import ArgumentParser
-import argparse
 from datetime import datetime
 import pytz
 
