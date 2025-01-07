@@ -5,19 +5,26 @@ from collections import defaultdict
 from argparse import ArgumentParser
 from datetime import datetime
 import pytz
+import os
+import base64
 
 
-def setup_log_file():
+# Set up timestamp in EST
+def set_timestamp():
     """Sets up a log file with the creation timestamp in its name using EST time."""
     # Define the EST timezone
     est_tz = pytz.timezone("US/Eastern")
 
     # Get the current timestamp in EST
-    timestamp = datetime.now(est_tz).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(est_tz).strftime("%Y_%m_%d-%H_%M_%S")
+    return timestamp
 
+# Setu up Log file
+def setup_log_file(timestamp):
     # Create the log file name with the EST timestamp
     log_file_name = f"log_file_{timestamp}.log"
     return log_file_name
+
 
 # Configures logging to redirect logs and print statements to a custom log file
 def setup_logging(log_file="output.log"):
@@ -63,6 +70,7 @@ class LoggerWriter:
         pass  # No action needed for flush
 
 
+# Set up headers for Kibana authentication
 def get_headers(api_key):
     headers = {
         'kbn-xsrf': 'true',
@@ -70,6 +78,117 @@ def get_headers(api_key):
         'Authorization': f'ApiKey {api_key}'
     }
     return headers
+
+
+# Check-in files to a new github branch
+def upload_file_to_github(repo_url, github_username, github_key, local_file_path, repo_file_path, github_branch, timestamp):
+    """
+    Upload or update a file in a GitHub repository.
+
+    Args:
+        repo_url (str): The GitHub repository URL.
+        username (str): GitHub username.
+        password (str): GitHub account password (or Personal Access Token).
+        file_path (str): Path to the local file to be uploaded.
+        repo_file_path (str): Path in the repository where the file should be saved.
+        commit_message (str): Commit message for the file upload.
+        branch (str): The branch where the file should be committed. Default is 'main'.
+    """
+
+    commit_message = f"Uploaded object via script at {timestamp}"
+
+    # Extract repo details from the URL
+    repo = repo_url.split("https://github.com/")[1]
+    api_url = f"https://github.com/api/v3/repos/{repo}"
+
+    # Step 1: Get the default branch's SHA
+    repo_info_url = f"{api_url}"
+    print(f"repo_info_url : {repo_info_url}")
+    repo_info_response = requests.get(repo_info_url, auth=(github_username, github_key))
+    if repo_info_response.status_code != 200:
+        print(f"Error retrieving repository info: {repo_info_response.status_code} : {repo_info_response.text}")
+        raise Exception("Failed to retrieve repository information.")
+
+    default_branch = repo_info_response.json().get("default_branch", "main")
+    default_branch_url = f"{api_url}/git/ref/heads/{default_branch}"
+    default_branch_response = requests.get(default_branch_url, auth=(github_username, github_key))
+    if default_branch_response.status_code != 200:
+        print(f"Error retrieving default branch '{default_branch}': {default_branch_response.text}")
+        raise Exception("Default branch not found.")
+
+    default_branch_sha = default_branch_response.json()["object"]["sha"]
+
+    # Step 2: Create the new branch
+    create_branch_url = f"{api_url}/git/refs"
+    payload = {
+        "ref": f"refs/heads/{github_branch}",
+        "sha": default_branch_sha
+    }
+    create_branch_response = requests.post(create_branch_url, json=payload, auth=(github_username, github_key))
+    if create_branch_response.status_code == 201:
+        print(f"Branch '{github_branch}' created successfully.")
+    else:
+        print(f"Failed to create branch: {create_branch_response.status_code}, {create_branch_response.text}")
+        raise Exception(f"Failed to create branch: {create_branch_response.text}")
+
+    # Step 3: Read the local file and encode it
+    with open(local_file_path, "rb") as file:
+        content = base64.b64encode(file.read()).decode("utf-8")
+
+    # Step 4: Prepare the payload for file upload
+    file_url = f"{api_url}/contents/{repo_file_path}"
+    payload = {
+        "message": commit_message,
+        "content": content,
+        "branch": github_branch  # Specify the branch
+    }
+
+    # Step 5: Upload the file
+    response = requests.put(file_url, json=payload, auth=(github_username, github_key))
+    if response.status_code in (200, 201):
+        print(f"File successfully uploaded to '{repo_url}/{repo_file_path}' on branch '{github_branch}'.")
+    else:
+        print(f"Failed to upload file: {response.status_code}, {response.text}")
+
+
+# Check-in files to an existing github branch
+def upload_file_to_existing_github(repo_url, github_username, github_key, local_file_path, repo_file_path, github_branch, timestamp):
+    """
+    Upload or update a file in a GitHub repository on the specified branch.
+
+    Args:
+        repo_url (str): The GitHub repository URL.
+        github_username (str): GitHub username.
+        github_key (str): GitHub account password or Personal Access Token.
+        file_path (str): Local path to the file to be uploaded.
+        repo_file_path (str): Path in the repository where the file should be saved.
+        commit_message (str): Commit message for the upload.
+        branch (str): The branch where the file should be committed.
+    """
+    # Commit message
+    commit_message = f"Log file uploaded via script at {timestamp}"
+
+    # Parse repository owner and name from the URL
+    repo = repo_url.split("https://github.com/")[1]
+    api_url = f"https://github.com/api/v3/repos/{repo}/contents/{repo_file_path}"
+
+    # Read the local file and encode it
+    with open(local_file_path, "rb") as file:
+        content = base64.b64encode(file.read()).decode("utf-8")
+
+    # Prepare payload for file upload
+    payload = {
+        "message": commit_message,
+        "content": content,
+        "branch": github_branch
+    }
+
+    # Upload or update the file
+    response = requests.put(api_url, json=payload, auth=(github_username, github_key))
+    if response.status_code in (200, 201):
+        print(f"File successfully uploaded to '{repo_url}/{repo_file_path}' on branch '{github_branch}'.")
+    else:
+        print(f"Failed to upload file: {response.status_code}, {response.text}")
 
 
 # Retrieve all kibana objects in the current space
@@ -131,6 +250,7 @@ def export_all_kibana_objects(all_kibana_objects, num_of_kibana_objects, headers
                 logging.error(f"Failed to export objects. Status code: {response.status_code}, Response: : {get_response.text}")
         else:
             logging.info(f"There are no Kibana objects to back-up. The '{OUTPUT_FILE}' file is not updated")
+        return OUTPUT_FILE
 
 
 # Function to get all data views in the space ID specified
@@ -156,7 +276,7 @@ def find_duplicated_data_views(data_views):
     return duplicates
 
 
-# Function to retrieve all objects that references any duplicated data views, and count the number of references to each data view
+# Retrieve all objects that references any duplicated data views, and count the number of references to each data view
 def get_object_references(data_view_ids, kibana_url, space_id, headers):
     objects_endpoint = f"{kibana_url}/s/{space_id}/api/saved_objects/_find"
     reference_counts = defaultdict(int)
@@ -189,7 +309,7 @@ def get_object_references(data_view_ids, kibana_url, space_id, headers):
     return reference_counts, all_objects
 
 
-# Function to update data view ID in objects referencing duplicated data views
+# Update data view ID in objects referencing duplicated data views
 def update_references(ref_type, ref_name, object_type, object_id, old_data_view_id, new_data_view_id, kibana_url, headers, dry_run):
     if dry_run:
         logging.info(f"[DRY-RUN] Would update data view ID in {object_type} with ID: {object_id} from {old_data_view_id} to {new_data_view_id}")
@@ -218,7 +338,7 @@ def update_references(ref_type, ref_name, object_type, object_id, old_data_view_
             logging.error(f"Failed to update object . Status code: {response.status_code}, Response: : {get_response.text}")
 
 
-# Check of the any object is referencing the Data View to be Deleted
+# Check if the any object is referencing the Data View to be Deleted
 def has_references(all_objects, data_view_id):
     for object in all_objects:
         references = object.get("references", [])
@@ -226,6 +346,8 @@ def has_references(all_objects, data_view_id):
             if ref['type'] == 'index-pattern' and ref['id'] in data_view_id:
                 return True
     return False
+
+
 
 def backup_data_view(kibana_url, headers, space_id, data_view_id, output_file):
     export_objects_endpoint = f"{kibana_url}/s/{space_id}/api/saved_objects/_export"
@@ -246,25 +368,46 @@ def backup_data_view(kibana_url, headers, space_id, data_view_id, output_file):
         with open(f"data_view_{data_view_id}_backup.ndjson", "w") as file:
             file.write(response.text)
         logging.info(f"Backup successful for data view: '{data_view_id}'! Saved to: 'data_view_{data_view_id}_backup.ndjson'")
+
+        # # Check-in data views to Github
+        # dataview_local_file = f"data_view_{data_view_id}_backup.ndjson"
+        # dataview_repo_file_path = dataview_local_file
+        # upload_file_to_existing_github(repo_url, github_username, github_key, dataview_local_file, dataview_repo_file_path,
+        #                                github_branch, timestamp)
     else:
         logging.error(f"Failed to backup data view {data_view_id}. Error: {response.text}")
         sys.exit(1)
 
+
 # Delete Data View if it has no references by other Kibana Objects
 def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, space_id, headers, dry_run):
     if dry_run:
-        logging.info(f"[DRY-RUN] Would check if data view with id: '{data_view_id}' is referenced by any object. If no object is referecning this Data View, it would be deleted")
+        logging.info(f"[DRY-RUN] Would check if data view with id: '{data_view_id}' is referenced by any object. If no object is referecning this Data View, you would be prompted to choose if you want it deleted.")
+        delete_data_view = input(f"Do you want this Data View with ID: {data_view_id} to be DELETED? Enter 'Y' for Yes, 'N' for No: ").upper()
+        if delete_data_view == "Y":
+            print(f"[DRY-RUN] Data View with ID: {data_view_id} would be DELETED \n")
+        elif delete_data_view == "N":
+            print(f"[DRY-RUN] Data View with ID: {data_view_id} would NOT be deleted \n")
+        else:
+            print(f"Invalid Entry. Re-run script and Enter 'Y' or 'N'")
         return None
     else:
         if not has_references(all_objects, data_view_id):
             dataview_url = f'{kibana_url}/s/{space_id}/api/data_views/data_view/{data_view_id}'
-            response = requests.delete(dataview_url, headers=headers)
-            if response.status_code == 200:
-                print("")
-                print(f"Data view with ID {data_view_id} successfully DELETED.")
+            delete_data_view = input(f"Do you want this Data View with ID: {data_view_id} to be DELETED? Enter 'Y' for Yes, 'N' for No: ").upper()
+            if delete_data_view == "Y":
+                response = requests.delete(dataview_url, headers=headers)
+                if response.status_code == 200:
+                    print("")
+                    print(f"Data view with ID {data_view_id} successfully DELETED.")
+                else:
+                    print("")
+                    print(f"Failed to delete Old data view {data_view_id} . Status code: {response.status_code}, Response: {response.text}")
+            elif delete_data_view == "N":
+                print(f"You elected NOT to delete Data View with ID: {data_view_id}. Hence this Data View would NOT be deleted \n")
             else:
-                print("")
-                print(f"Failed to delete Old data view {data_view_id} . Status code: {response.status_code}, Response: {response.text}")
+                print(f"Invalid Entry. Re-run script and Enter a valid entry: 'Y' or 'N'")
+            return None
         else:
             print("")
             print(f"Data view {data_view_id} has references and was NOT deleted.")
@@ -272,14 +415,17 @@ def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, spac
 
 # main
 def main(kibana_url, headers, space_id, dry_run):
-    log_file_name = setup_log_file()
+    log_file_name = setup_log_file(timestamp)
     setup_logging(log_file_name)  # Initialize logging
     updated_objects_count = 0
     data_views_to_be_deleted = []
     objects_config_before_update = []
     updated_objects = []
     all_kibana_objects, num_of_kibana_objects = retrieve_all_kibana_objects(headers, kibana_url)
-    export_all_kibana_objects(all_kibana_objects, num_of_kibana_objects, headers, kibana_url, dry_run)
+    kibana_objects = export_all_kibana_objects(all_kibana_objects, num_of_kibana_objects, headers, kibana_url, dry_run)
+    local_file_path = f"{kibana_objects}"
+    repo_file_path = f"all_objects/{local_file_path}"
+    upload_file_to_github(repo_url, github_username, github_key, local_file_path, repo_file_path, github_branch, timestamp)
     data_views = get_all_dataviews(space_id, headers, kibana_url)
     duplicates = find_duplicated_data_views(data_views)
     print("")
@@ -291,7 +437,7 @@ def main(kibana_url, headers, space_id, dry_run):
         for title, ids in duplicates.items():
             # Get the reference counts for each data view ID in the duplicated group
             reference_counts, all_objects = get_object_references(ids, kibana_url, space_id, headers)
-            print(f"Title: {title}")
+            print(f"DATA VIEW TITLE: {title}")
             for id in ids:
                 print(f"  ID: {id}  : {reference_counts[id]}")
                 dup_data_view_ids.append(id)
@@ -356,12 +502,22 @@ def main(kibana_url, headers, space_id, dry_run):
             data_views_to_be_deleted = []
         for data_view_id in data_views_to_be_deleted:
             # Backup each data view
-            backup_data_view(kibana_url, headers, space_id, data_view_id, f"BData_view_{data_view_id}_back_up.ndjson")
+            backup_data_view(kibana_url, headers, space_id, data_view_id, f"Data_view_{data_view_id}_back_up.ndjson")
+
+            # Check-in data views back-ups to Github
+            dataview_local_file = f"data_view_{data_view_id}_backup.ndjson"
+            dataview_repo_file_path = dataview_local_file
+            upload_file_to_existing_github(repo_url, github_username, github_key, dataview_local_file, dataview_repo_file_path, github_branch, timestamp)
+
             # Delete each data view
             delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, space_id, headers, dry_run)
 
     else:
         print("There are no Data Views to be deleted")
+    # log_file_name = setup_log_file(timestamp)
+    log_file = log_file_name
+    log_repo_file_path = log_file
+    upload_file_to_existing_github(repo_url, github_username, github_key, log_file, log_repo_file_path, github_branch, timestamp)
 
 
 if __name__ == "__main__":
@@ -369,18 +525,31 @@ if __name__ == "__main__":
     parser.add_argument('--kibana_url', default='None', required=True)
     parser.add_argument('--api_key', default='None', required=True)
     parser.add_argument('--space_id', default='None', required=True)
-    parser.add_argument('--dry_run', choices=['True', 'False', 'false'], default='True')    # Set dry_run=True to test without updating the object
+    parser.add_argument('--dry_run', choices=['True', 'False', 'false'], default='True')
+
+    parser.add_argument('--github_username', default='None', required=False)
+    parser.add_argument('--github_key', default='None', required=False)
+
     args = parser.parse_args()
     kibana_url = args.kibana_url
     api_key = args.api_key
     space_id = args.space_id
     dry_run = args.dry_run
 
-    
+    github_username = args.github_username
+    github_key = args.github_key
+    # github_branch = args.github_branch
+
     if dry_run.lower() == 'true':
         dry_run = True
     else:
         dry_run = False
+
+    # Get timestamp
+    timestamp = set_timestamp()
+
+    repo_url = "https://github.com/olajio/cleanup_duplicate_dataviews"
+    github_branch = f"{github_username}-{timestamp}"
 
     headers = get_headers(api_key)
     main(kibana_url, headers, space_id, dry_run)
