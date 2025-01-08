@@ -524,6 +524,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description='Automate the process of cleaning up duplicate data views!')
     parser.add_argument('--kibana_url', default='None', required=True)
     parser.add_argument('--api_key', default='None', required=True)
+    parser.add_argument('--cluster_name', default='None', required=True)
     parser.add_argument('--space_id', default='None', required=True)
     parser.add_argument('--dry_run', choices=['True', 'False', 'false'], default='True')
 
@@ -533,6 +534,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     kibana_url = args.kibana_url
     api_key = args.api_key
+    cluster_name = args.cluster_name
     space_id = args.space_id
     dry_run = args.dry_run
 
