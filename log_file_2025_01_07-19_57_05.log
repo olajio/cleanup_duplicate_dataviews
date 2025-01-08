@@ -1,0 +1,10 @@
+2025-01-07 18:57:05,151 - INFO - Retrieving all Kibana objects in space: 'test'...
+2025-01-07 18:57:10,011 - INFO - 2 Kibana objects were found in this space: 'test'
+2025-01-07 18:57:10,012 - INFO - Exporting all Kibana objects in space: 'test' to the 'kibana_objects.ndjson'. This would be used to restore all objects in case something goes wrong...
+2025-01-07 18:57:10,154 - INFO - All 2 Kibana objects are successfully backed-up to the 'kibana_objects.ndjson' file
+2025-01-07 18:57:10,155 - INFO - repo_info_url : https://api.github.com/repos/olajio/cleanup_duplicate_dataviews
+2025-01-07 18:57:10,944 - INFO - Branch 'olajio-2025_01_07-19_57_05' created successfully.
+2025-01-07 18:57:11,569 - INFO - File successfully uploaded to 'https://github.com/olajio/cleanup_duplicate_dataviews/all_objects/kibana_objects.ndjson' on branch 'olajio-2025_01_07-19_57_05'.
+2025-01-07 18:57:11,717 - INFO - No duplicated data views found.
+2025-01-07 18:57:11,717 - INFO - No objects were updated
+2025-01-07 18:57:11,718 - INFO - There are no Data Views to be deleted
