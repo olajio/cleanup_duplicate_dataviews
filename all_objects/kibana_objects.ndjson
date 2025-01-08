@@ -1,0 +1,3 @@
+{"attributes":{"buildNum":76785,"isDefaultIndexMigrated":true},"coreMigrationVersion":"8.8.0","created_at":"2025-01-08T00:51:07.806Z","id":"8.15.4","managed":false,"references":[],"type":"config","typeMigrationVersion":"8.9.0","updated_at":"2025-01-08T00:51:07.806Z","version":"WzQ2OCwyXQ=="}
+{"attributes":{"buildNum":76785,"isDefaultIndexMigrated":true},"coreMigrationVersion":"8.8.0","created_at":"2025-01-07T22:22:52.293Z","created_by":"u_885670904_cloud","id":"8.15.4","managed":false,"references":[],"type":"config-global","updated_at":"2025-01-07T22:22:52.293Z","updated_by":"u_885670904_cloud","version":"WzUzLDJd"}
+{"excludedObjects":[],"excludedObjectsCount":0,"exportedCount":2,"missingRefCount":0,"missingReferences":[]}
