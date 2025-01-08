@@ -19,7 +19,7 @@ def set_timestamp():
     timestamp = datetime.now(est_tz).strftime("%Y_%m_%d-%H_%M_%S")
     return timestamp
 
-# Setu up Log file
+# Setup Log file
 def setup_log_file(timestamp):
     # Create the log file name with the EST timestamp
     log_file_name = f"log_file_{timestamp}.log"
@@ -415,12 +415,15 @@ def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, spac
 
 # main
 def main(kibana_url, headers, space_id, dry_run):
+    print(f"Running the script for space: '{space_id}' in the cluster: '{cluster_name}'")
+
     log_file_name = setup_log_file(timestamp)
     setup_logging(log_file_name)  # Initialize logging
     updated_objects_count = 0
     data_views_to_be_deleted = []
     objects_config_before_update = []
     updated_objects = []
+
     all_kibana_objects, num_of_kibana_objects = retrieve_all_kibana_objects(headers, kibana_url)
     kibana_objects = export_all_kibana_objects(all_kibana_objects, num_of_kibana_objects, headers, kibana_url, dry_run)
     local_file_path = f"{kibana_objects}"
@@ -524,7 +527,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description='Automate the process of cleaning up duplicate data views!')
     parser.add_argument('--kibana_url', default='None', required=True)
     parser.add_argument('--api_key', default='None', required=True)
-    parser.add_argument('--cluster_name', default='None', required=True)
+    parser.add_argument('--cluster_name', default='None', choices=['dev', 'qa', 'prod', 'ccs'], required=True)
     parser.add_argument('--space_id', default='None', required=True)
     parser.add_argument('--dry_run', choices=['True', 'False', 'false'], default='True')
 
@@ -540,7 +543,6 @@ if __name__ == "__main__":
 
     github_username = args.github_username
     github_key = args.github_key
-    # github_branch = args.github_branch
 
     if dry_run.lower() == 'true':
         dry_run = True
