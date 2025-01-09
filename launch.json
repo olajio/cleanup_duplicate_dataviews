@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--kibana_url", "https://e001708f0fe44a4d96341be1bf9a9943.us-east-1.aws.found.io:9243",
+                "--api_key", "YnludEVKSUJBVUZMcHRIbTZ5LVM6bEp5QkFGdGxTNkN2M082dXRKWVVrUQ==",
+                "--cluster_name", "dev",
+                "--space_id", "test_space_ola",
+                "--github_username", "oolajide",
+                "--github_key", "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",
+                "--dry_run", "False"
+            ]
+        }
+    ]
+}
