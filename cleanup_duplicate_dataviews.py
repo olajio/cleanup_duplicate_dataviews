@@ -99,11 +99,10 @@ def upload_file_to_github(repo_url, github_username, github_key, local_file_path
 
     # Extract repo details from the URL
     repo = repo_url.split("https://github.com/")[1]
-    api_url = f"https://github.com/api/v3/repos/{repo}"
+    api_url = f"https://api.github.com/repos/{repo}"
 
     # Step 1: Get the default branch's SHA
     repo_info_url = f"{api_url}"
-    print(f"repo_info_url : {repo_info_url}")
     repo_info_response = requests.get(repo_info_url, auth=(github_username, github_key))
     if repo_info_response.status_code != 200:
         print(f"Error retrieving repository info: {repo_info_response.status_code} : {repo_info_response.text}")
@@ -170,7 +169,7 @@ def upload_file_to_existing_github(repo_url, github_username, github_key, local_
 
     # Parse repository owner and name from the URL
     repo = repo_url.split("https://github.com/")[1]
-    api_url = f"https://github.com/api/v3/repos/{repo}/contents/{repo_file_path}"
+    api_url = f"https://api.github.com/repos/{repo}/contents/{repo_file_path}"
 
     # Read the local file and encode it
     with open(local_file_path, "rb") as file:
@@ -348,7 +347,6 @@ def has_references(all_objects, data_view_id):
     return False
 
 
-
 def backup_data_view(kibana_url, headers, space_id, data_view_id, output_file):
     export_objects_endpoint = f"{kibana_url}/s/{space_id}/api/saved_objects/_export"
     payload = {
@@ -415,8 +413,6 @@ def delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, spac
 
 # main
 def main(kibana_url, headers, space_id, dry_run):
-    print(f"Running the script for space: '{space_id}' in the cluster: '{cluster_name}'")
-
     log_file_name = setup_log_file(timestamp)
     setup_logging(log_file_name)  # Initialize logging
     updated_objects_count = 0
@@ -424,6 +420,7 @@ def main(kibana_url, headers, space_id, dry_run):
     objects_config_before_update = []
     updated_objects = []
 
+    print(f"Running the script for space: '{space_id}' in the cluster: '{cluster_name}'")
     all_kibana_objects, num_of_kibana_objects = retrieve_all_kibana_objects(headers, kibana_url)
     kibana_objects = export_all_kibana_objects(all_kibana_objects, num_of_kibana_objects, headers, kibana_url, dry_run)
     local_file_path = f"{kibana_objects}"
@@ -433,7 +430,7 @@ def main(kibana_url, headers, space_id, dry_run):
     duplicates = find_duplicated_data_views(data_views)
     print("")
     if not duplicates:
-        logging.info("No duplicated data views found.")
+        logging.info("ALL CLEAR: No Duplicate Data Views found.")
     else:
         dup_data_view_ids = []
         logging.warning("Duplicated data views found:")
@@ -482,7 +479,7 @@ def main(kibana_url, headers, space_id, dry_run):
             print(f"{updated_objects_count} objects in total were UPDATED")
             print("")
     else:
-        print("No objects were updated")
+        print("ALL CLEAR: No objects needed to be updated")
         print("")
     if duplicates:
         print("REVIEW DUPLICATE DATA VIEWS BEFORE REMOVING DUPLICATES WITH ZERO REFERENCES")
@@ -516,7 +513,7 @@ def main(kibana_url, headers, space_id, dry_run):
             delete_dataview_if_no_references(data_view_id, all_objects, kibana_url, space_id, headers, dry_run)
 
     else:
-        print("There are no Data Views to be deleted")
+        print("ALL CLEAR: No Data Views needed to be deleted")
     # log_file_name = setup_log_file(timestamp)
     log_file = log_file_name
     log_repo_file_path = log_file
