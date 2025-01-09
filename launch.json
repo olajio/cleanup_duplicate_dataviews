@@ -8,14 +8,20 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--kibana_url", "https://e001708f0fe44a4d96341be1bf9a9943.us-east-1.aws.found.io:9243",
-                "--api_key", "YnludEVKSUJBVUZMcHRIbTZ5LVM6bEp5QkFGdGxTNkN2M082dXRKWVVrUQ==",
-                "--cluster_name", "dev",
-                "--space_id", "test_space_ola",
-                "--github_username", "oolajide",
-                "--github_key", "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",
+                "--kibana_url", "https://my-deployment-42f204.kb.us-east-2.aws.elastic-cloud.com",
+                "--api_key", "d203clFwUUJwYmJycTVNd2ZYdlA6Y2R0YnVOTXBTUDZXazVheURYS3pEQQ==",
+                "--cluster_name", "my-deployment",
+                "--space_id", "default",
+                "--gitlab_username", "olamideolajide",
+                "--private_token", "nnhEUzwxsv5sy3dsgsmx",
                 "--dry_run", "False"
             ]
         }
     ]
 }
+
+
+
+
+
+--kibana_url "https://my-deployment-42f204.kb.us-east-2.aws.elastic-cloud.com" --api_key "d203clFwUUJwYmJycTVNd2ZYdlA6Y2R0YnVOTXBTUDZXazVheURYS3pEQQ==" --cluster_name "my-deployment" --space_id "test" --gitlab_username "olamideolajide" --private_token "nnhEUzwxsv5sy3dsgsmx" --dry_run "False"
