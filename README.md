@@ -46,8 +46,6 @@ Params to the script:
 <img width="869" alt="image" src="https://github.com/user-attachments/assets/7a1257ce-b07e-4b31-8caa-69ae6f4fa4a0" />
 
 
-![image](https://github.com/user-attachments/assets/d4fef87f-7100-4730-8d36-daef71d4cc91)
-
 
 
 
@@ -76,7 +74,7 @@ python3 cleanup_duplicate_dataviews.py --kibana_url "https://xxxxxxxxxxxxxxxxxxx
 
 https://whiteboard.office.com/me/whiteboards/4f84e454-b330-4c89-9993-cf0526167b1d
 
-![image](https://github.com/user-attachments/assets/d1eebca1-d48c-4335-9cfe-a63257de751e)
+![image](https://github.com/user-attachments/assets/6c2d395e-d776-492d-a90d-b2a2c3fcf0b8)
 
 
 
