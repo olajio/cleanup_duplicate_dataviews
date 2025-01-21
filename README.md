@@ -26,7 +26,7 @@ Ensure you have the permission to install Python Modules on your local machine. 
 
 ```
 {
-  "ELK-ITSMA-710-Role": {
+  "Super_Role": {
     "cluster": [
       "all"
     ],
@@ -165,3 +165,6 @@ In the event that something goes wrong while updating the Kibana Objects or Dele
 ### Expected results/Validation:
 
 Once the script is ran, it is expected to cleanup duplicated data view after updating the objects that are referencing those data views with the id of the **“new”** or **“preferred”** data view. So once can either manually validate these in Kibana or rerun the script one more time to ensure that: **“No duplicated Data views found”**, **“No objects needed to be updated”** and **“No Data Views needed to be deleted”**.  When you run the script one more time after the space is cleaned-up, you should expect to see three **ALL CLEAR** messages with the phrases listed above. It should look like the following image:
+
+![Screenshot 2025-01-21 at 1 33 55 PM](https://github.com/user-attachments/assets/39b39579-89bd-4624-afa3-fa5ef230afaf)
+
