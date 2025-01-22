@@ -94,7 +94,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description='Automate the process of finding duplicate data views!')
     parser.add_argument('--kibana_url', default='None', required=True)
     parser.add_argument('--api_key', default='None', required=True)
-    parser.add_argument('--cluster_name', default='None', choices=['dev', 'qa', 'prod', 'ccs'], required=True)
+    parser.add_argument('--cluster_name', default='None', required=True)
     parser.add_argument('--space_id', default='None', required=True)
 
 
