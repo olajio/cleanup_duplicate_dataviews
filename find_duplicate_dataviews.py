@@ -4,13 +4,6 @@ from collections import defaultdict
 from argparse import ArgumentParser
 
 
-
-# dev_kibana_url = 'https://e001708f0fe44a4d96341be1bf9a9943.us-east-1.aws.found.io:9243'
-# qa_kibana_url = 'https://66f6f47a3ef14711adcaa97b8385a6ed.us-east-1.aws.found.io:9243'
-# prod_kibana_url = 'https://a8d089aa7eb241639d5ba3dbd343cd29.us-east-1.aws.found.io:9243'
-# ccs_kibana_url = 'https://287d86a4b1184182b340bd5074cdfd7e.us-east-1.aws.found.io:9243'
-
-
 # Set up headers for Kibana authentication
 def get_headers(api_key):
     headers = {
@@ -19,7 +12,6 @@ def get_headers(api_key):
         'Authorization': f'ApiKey {api_key}'
     }
     return headers
-
 
 
 # Function to get all data views in the space ID specified
