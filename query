@@ -1,0 +1,101 @@
+GET prod:traces-apm*,prod:logs-apm*,prod:metrics-apm*/_search
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "terms": {
+            "_tier": [
+              "data_hot",
+              "data_content"
+            ]
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "now-2d"
+            }
+          }
+        },
+        {
+          "exists": {
+            "field": "labels.dataset"
+          }
+        },
+        {
+          "match_phrase": {
+            "service.name": "Checklist"
+          }
+        },
+        {
+          "match_phrase": {
+            "span.type": "custom"
+          }
+        },
+        {
+          "match_phrase": {
+            "span.subtype": "datacall"
+          }
+        },
+        {
+          "match_phrase": {
+            "span.action": "run"
+          }
+        },
+        {
+          "exists": {
+            "field": "labels.client"
+          }
+        },
+        {
+          "match_phrase": {
+            "service.environment": "prod"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match_phrase": {
+            "labels.type": "dry-run"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "dataset_name": {
+      "terms": {
+        "field": "labels.dataset",
+        "size": 1
+      },
+      "aggs": {
+        "event_outcome": {
+          "terms": {
+            "field": "event.outcome",
+            "size": 1
+          }
+        },
+        "details": {
+          "top_hits": {
+            "_source": [
+              "@timestamp",
+              "labels.dataset",
+              "service.name",
+              "labels.client",
+              "span.type",
+              "span.subtype"
+            ],
+            "size": 1
+          }
+        },
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        }
+      }
+    }
+  }
+}
